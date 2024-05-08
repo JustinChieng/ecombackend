@@ -12,7 +12,9 @@ const Movie = require("../models/product");
 router.get("/", async (req, res) => {
     try {
       const category = req.query.category;
-      const products = await getProducts(category);
+      const perPage = req.query.perPage;
+      const page = req.query.page
+      const products = await getProducts(category, perPage, page);
       res.status(200).send(products);
     } catch (error) {
       res.status(400).send({

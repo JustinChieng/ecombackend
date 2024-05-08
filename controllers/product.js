@@ -1,7 +1,7 @@
 // load all the models
 const Product = require("../models/product");
 
-const getProducts = async (category) => {
+const getProducts = async (category, perPage = 4, page = 1) => {
   try {
     let filters = {};
     let sortQuery = { _id: -1 };
@@ -12,7 +12,17 @@ const getProducts = async (category) => {
     sorting > 1 is asc, -1 is desc
     default sorting is sort by _id > { _id: 1 }
     */
-    const products = await Product.find(filters).sort(sortQuery);
+
+    /* 
+      Pagination
+      .limit() // limit the amount of items returned
+      .skip() // skip given amount
+    */
+    
+    const products = await Product.find(filters)
+    .limit(perPage) // 4
+    .skip((page - 1) * perPage) //
+    .sort(sortQuery);
     return products;
   } catch (error) {
     throw new Error(error);
