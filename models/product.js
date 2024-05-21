@@ -17,7 +17,8 @@ const productSchema = new Schema({
     category: {
         type: String,
         required: true,
-    }
+    },
+    image: String,
 });
 
 //convert the schema into a model

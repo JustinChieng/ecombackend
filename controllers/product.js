@@ -1,28 +1,24 @@
 // load all the models
 const Product = require("../models/product");
-
-const getProducts = async (category, perPage = 4, page = 1) => {
+const getProducts = async (category, perPage = 6, page = 1) => {
   try {
     let filters = {};
-    let sortQuery = { _id: -1 };
     if (category) {
       filters.category = category;
     }
     /* 
-    sorting > 1 is asc, -1 is desc
-    default sorting is sort by _id > { _id: 1 }
-    */
-
+      sorting > 1 is asc, -1 is desc
+      default sorting is sort by _id > { _id: 1 }
+      */
     /* 
       Pagination
       .limit() // limit the amount of items returned
       .skip() // skip given amount
     */
-    
     const products = await Product.find(filters)
-    .limit(perPage) // 4
-    .skip((page - 1) * perPage) //
-    .sort(sortQuery);
+      .limit(perPage) // 4
+      .skip((page - 1) * perPage) //
+      .sort({ _id: -1 });
     return products;
   } catch (error) {
     throw new Error(error);
@@ -31,9 +27,9 @@ const getProducts = async (category, perPage = 4, page = 1) => {
 
 // get 1 product
 const getProduct = async (id) => {
-    const product = await Product.findById(id);
-    return product;
-  };
+  const product = await Product.findById(id);
+  return product;
+};
 
 // add
 const addProduct = async (name, description, price, category) => {
@@ -42,7 +38,7 @@ const addProduct = async (name, description, price, category) => {
     name,
     description,
     price,
-    category
+    category,
   });
   // save the product with mongodb
   await newProduct.save();
@@ -55,7 +51,8 @@ const updateProduct = async (
   name,
   description,
   price,
-  category
+  category,
+  image
 ) => {
   const updatedProduct = await Product.findByIdAndUpdate(
     product_id,
@@ -63,7 +60,8 @@ const updateProduct = async (
       name,
       description,
       price,
-      category
+      category,
+      image,
     },
     { new: true } // send in the updated data
   );
@@ -72,13 +70,13 @@ const updateProduct = async (
 
 // delete
 const deleteProduct = async (id) => {
-    return await Product.findByIdAndDelete(id);
-  };
+  return await Product.findByIdAndDelete(id);
+};
 
 module.exports = {
   getProducts,
   getProduct,
   addProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
 };
